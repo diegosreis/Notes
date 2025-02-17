@@ -1,0 +1,28 @@
+services:
+    web:
+        image: lite-notes:latest # Or remove image if you always want to rebuild
+        build:
+            context: .
+        env_file: .env
+        ports:
+            - "8000:80"
+        volumes:
+            - .:/var/www/html # Correct volume mapping
+        depends_on:
+            - db
+
+    db:
+        platform: "linux/amd64"  # If needed for architecture compatibility
+        image: mysql:5.7
+        env_file: .env
+        environment:
+            MYSQL_ROOT_PASSWORD: root  # For development; stronger in production!
+            MYSQL_DATABASE: lite_notes
+
+        volumes:
+            - dbdata:/var/lib/mysql
+        ports:
+            - "3306:3306" # Only if you need external access to the database
+
+volumes:
+    dbdata:
